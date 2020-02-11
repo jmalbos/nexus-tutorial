@@ -51,7 +51,7 @@ int main(int argc, char** argv)
   }
   else {
     // interactive mode
-    uimgr->ApplyCommand("/control/execute init_vis.mac");
+    uimgr->ApplyCommand("/control/execute mac/init_vis.mac");
     ui->SessionStart();
     delete ui;
   }
