@@ -1,4 +1,8 @@
-// G4Basic | DetectorConstruction.h
+// -----------------------------------------------------------------------------
+//  G4Basic | DetectorConstruction.h
+//
+//
+// -----------------------------------------------------------------------------
 
 #ifndef DETECTOR_CONSTRUCTION_H
 #define DETECTOR_CONSTRUCTION_H
