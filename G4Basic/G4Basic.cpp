@@ -1,66 +1,58 @@
-// G4Basic | G4Basic.cpp
+// -----------------------------------------------------------------------------
+//  G4Basic | G4Basic.cpp
+//
+//  Main function of the Geant4 simulation.
+// -----------------------------------------------------------------------------
 
-#include "DetectorConstruction.h"
+#include "PhysicsList.h"
+#include "DetectorConstruction2.h"
 #include "PrimaryGeneration.h"
-//#include "SteppingAction.h"
+#include "RunAction.h"
+#include "EventAction.h"
+#include "TrackingAction.h"
+#include "SteppingAction.h"
 
 #include <G4RunManager.hh>
 #include <G4UImanager.hh>
 #include <G4VisExecutive.hh>
-#include <G4UIExecutive.hh>
-#include <FTFP_BERT_HP.hh>
-#include <G4EmStandardPhysics_option4.hh>
+#include <G4UIterminal.hh>
+#include <G4UItcsh.hh>
 
 
-int main(int argc, char** argv)
+int main(int argc, char const *argv[])
 {
-  // Detect interactive mode (if no arguments) and define UI session
-  //
-  G4UIExecutive* ui = 0;
-  if ( argc == 1 ) {
-    ui = new G4UIExecutive(argc, argv);
-  }
-
-  // Construct the run manager and set the initialization classes
+  // Construct the run manager and set the initialization classes next
   G4RunManager* runmgr = new G4RunManager();
-
-  G4VModularPhysicsList* physics_list = new FTFP_BERT_HP();
-  physics_list->ReplacePhysics(new G4EmStandardPhysics_option4());
-  runmgr->SetUserInitialization(physics_list);
-
-  runmgr->SetUserInitialization(new DetectorConstruction());
-
+  runmgr->SetUserInitialization(new PhysicsList());
+  runmgr->SetUserInitialization(new DetectorConstruction2());
   runmgr->SetUserAction(new PrimaryGeneration());
+  runmgr->SetUserAction(new RunAction());
+  runmgr->Initialize();
 
-  //runmgr->SetUserAction(new SteppingAction());
-
-  // Initialize visualization
-  G4VisManager* vismgr = new G4VisExecutive();
-  vismgr->Initialize();
-
-  // Get the pointer to the User Interface manager
-  G4UImanager* uimgr = G4UImanager::GetUIpointer();
-
-  // Process macro or start UI session
-  //
-  if (!ui) {
-    // batch mode
-    G4String command = "/control/execute ";
-    G4String fileName = argv[1];
-    uimgr->ApplyCommand(command+fileName);
+  // If no macro file was provided via command line,
+  // start an interactive session.
+  if (argc == 1) {
+    G4VisManager* vismgr = new G4VisExecutive();
+    vismgr->Initialize();
+    G4UImanager::GetUIpointer()->
+      ApplyCommand("/control/execute mac/vis.mac");
+    G4UIsession* session = new G4UIterminal(new G4UItcsh);
+    session->SessionStart();
+    delete session;
+    delete vismgr;
   }
+  // We will assume that the first command-line argument is the name
+  // of a valid macro file. Any other argument will be ignored.
   else {
-    // interactive mode
-    uimgr->ApplyCommand("/control/execute mac/init_vis.mac");
-    ui->SessionStart();
-    delete ui;
+    G4String command = "/control/execute " + std::string(argv[1]);
+    G4UImanager::GetUIpointer()->ApplyCommand(command);
   }
 
   // Job termination
   // Free the store: user actions, physics_list and detector_description are
   // owned and deleted by the run manager, so they should not be deleted
   // in the main() program.
-
-  delete vismgr;
   delete runmgr;
+
+  return EXIT_SUCCESS;
 }
