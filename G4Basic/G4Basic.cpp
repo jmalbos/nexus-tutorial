@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------
 
 #include "PhysicsList.h"
-#include "DetectorConstruction2.h"
+#include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "RunAction.h"
 #include "EventAction.h"
@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
   // Construct the run manager and set the initialization classes next
   G4RunManager* runmgr = new G4RunManager();
   runmgr->SetUserInitialization(new PhysicsList());
-  runmgr->SetUserInitialization(new DetectorConstruction2());
+  runmgr->SetUserInitialization(new DetectorConstruction());
   runmgr->SetUserAction(new PrimaryGeneration());
   runmgr->SetUserAction(new RunAction());
   runmgr->Initialize();
