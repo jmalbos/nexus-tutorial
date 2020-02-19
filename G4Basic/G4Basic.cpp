@@ -9,8 +9,8 @@
 #include "PrimaryGeneration.h"
 #include "RunAction.h"
 #include "EventAction.h"
-#include "TrackingAction.h"
-#include "SteppingAction.h"
+//#include "TrackingAction.h"
+//#include "SteppingAction.h"
 
 #include <G4RunManager.hh>
 #include <G4UImanager.hh>
