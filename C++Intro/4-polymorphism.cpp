@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-//  C++ Intro | 3-polymorphism.cpp
+//  C++ Intro | 4-polymorphism.cpp
 //
 //  Polymorphism.
 // -----------------------------------------------------------------------------
@@ -12,6 +12,8 @@
 
 int main()
 {
+  std::cout << "\nC++ Intro | 4-polymorphism\n" << std::endl;
+
   std::vector<Shape*> vs;
 
   Shape* circle = new Circle(1.0);
