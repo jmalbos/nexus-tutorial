@@ -31,8 +31,9 @@ int main()
 
   {
     std::cout << "Instance of the derived class allocated dynamically." << std::endl;
-    DerivedClass* p_dc = new DerivedClass("derived");
+    BaseClass* p_dc = new DerivedClass("derived");
     p_dc->Print();
+    delete p_dc;
   }
 
   return 0;
