@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //  C++ Intro | 1-classes.cpp
 //
-//  Class declaration and definition
+//  Class declaration and definition.
 // -----------------------------------------------------------------------------
 
 #include <iostream>

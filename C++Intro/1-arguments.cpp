@@ -52,8 +52,7 @@ int main()
   // Passing arguments by pointer
 
   number = 0;
-  int* pointer = nullptr;
-  pointer = &number;
+  int* pointer = &number; // int* pointer(&number);
 
   std::cout << "number: " << number << std::endl;
   std::cout << "add_one_by_pointer(pointer): " << add_one_by_pointer(pointer) << std::endl;
