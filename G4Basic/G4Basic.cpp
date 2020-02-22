@@ -7,8 +7,8 @@
 #include "PhysicsList.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "RunAction.h"
-#include "EventAction.h"
+//#include "RunAction.h"
+//#include "EventAction.h"
 //#include "TrackingAction.h"
 //#include "SteppingAction.h"
 
@@ -26,7 +26,6 @@ int main(int argc, char const *argv[])
   runmgr->SetUserInitialization(new PhysicsList());
   runmgr->SetUserInitialization(new DetectorConstruction());
   runmgr->SetUserAction(new PrimaryGeneration());
-//  runmgr->SetUserAction(new RunAction());
   runmgr->Initialize();
 
   // If no macro file was provided via command line,
@@ -34,11 +33,14 @@ int main(int argc, char const *argv[])
   if (argc == 1) {
     G4VisManager* vismgr = new G4VisExecutive();
     vismgr->Initialize();
+
     G4UImanager::GetUIpointer()->
       ApplyCommand("/control/execute mac/vis.mac");
-    G4UIsession* session = new G4UIterminal(new G4UItcsh);
-    session->SessionStart();
-    delete session;
+
+    G4UIsession* ui = new G4UIterminal(new G4UItcsh);
+    ui->SessionStart();
+
+    delete ui;
     delete vismgr;
   }
   // We will assume that the first command-line argument is the name
@@ -54,5 +56,5 @@ int main(int argc, char const *argv[])
   // in the main() program.
   delete runmgr;
 
-  return EXIT_SUCCESS;
+  return 0;
 }
