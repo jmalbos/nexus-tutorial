@@ -25,6 +25,7 @@ Circle::Circle(float radius): Shape("circle"), radius_(radius)
 
 Circle::~Circle()
 {
+  std::cout << "Circle::~Circle()" << std::endl;
 }
 
 
@@ -49,6 +50,7 @@ Square::Square(float side): Shape("square"), side_(side)
 
 Square::~Square()
 {
+  std::cout << "Square::~Square()" << std::endl;
 }
 
 

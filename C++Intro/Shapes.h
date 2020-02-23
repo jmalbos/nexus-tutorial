@@ -8,6 +8,7 @@
 #define SHAPES_H
 
 #include <string>
+#include <iostream>
 
 ////////////////////////////////////////////////////////////
 
@@ -71,6 +72,6 @@ private:
 ////////////////////////////////////////////////////////////
 
 inline Shape::Shape(std::string name): name_(name) {}
-inline Shape::~Shape() {}
+inline Shape::~Shape() { std::cout << "Shape::~Shape()" << std::endl; }
 
 #endif

@@ -23,7 +23,7 @@ BaseClass::~BaseClass()
 void BaseClass::Print()
 {
   std::cout << "BaseClass::Print()" << std::endl;
-  std::cout << "This class is called " << name_ << "." << std::endl;
+  std::cout << "This class is called " << GetName() << "." << std::endl;
 }
 
 std::string BaseClass::GetName()
@@ -52,5 +52,5 @@ DerivedClass::~DerivedClass()
 void DerivedClass::Print()
 {
   std::cout << "DerivedClass::Print()" << std::endl;
-  std::cout << "This class is called " << GetName() << "." << std::endl;
+  BaseClass::Print();
 }

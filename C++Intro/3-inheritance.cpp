@@ -27,14 +27,5 @@ int main()
     dc.Print();
   }
 
-  std::cout << std::endl;
-
-  {
-    std::cout << "Instance of the derived class allocated dynamically." << std::endl;
-    BaseClass* p_dc = new DerivedClass("derived");
-    p_dc->Print();
-    delete p_dc;
-  }
-
   return 0;
 }

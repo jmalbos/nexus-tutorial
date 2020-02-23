@@ -14,9 +14,7 @@ void func();
 int var = 123;
 
 // Definition of a variable inside of a namespace
-namespace foo {
-  int var = 456;
-}
+namespace foo { int var = 456; }
 
 // Main function. Must return always an int.
 int main()
@@ -32,7 +30,7 @@ int main()
   return 0;
 }
 
-// Definition of foo: we provide the body (implementation) of the function
+// Definition of func(): we provide the body (implementation) of the function
 void func()
 {
   std::cout << "var = " << var << std::endl;
