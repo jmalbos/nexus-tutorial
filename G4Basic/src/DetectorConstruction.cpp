@@ -30,86 +30,94 @@ DetectorConstruction::~DetectorConstruction()
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
-  // WORLD /////////////////////////////////////////////////
+  // FACE //////////////////////////////////////////////////
 
-  G4String world_name = "WORLD";
-  G4double world_size = 25.*m;
+  G4String face_name   = "FACE";
+  G4double face_diam   = 700.*cm;
+  G4double face_thickn = 100.*cm;
 
-  G4Sphere* world_solid_vol =
-    new G4Sphere(world_name, 0., world_size/2., 0., 360.*deg, 0., 180.*deg);
+  G4Tubs* face_solid_vol =
+    new G4Tubs(face_name, 0., face_diam/2., face_thickn/2., 0., 360.*deg);
 
-  G4LogicalVolume* world_logic_vol =
-    new G4LogicalVolume(world_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-                        world_name);
+  G4LogicalVolume* face_logic_vol =
+    new G4LogicalVolume(face_solid_vol,
+                        G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
+                        face_name);
 
-  G4VPhysicalVolume* world_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
-                      world_logic_vol, world_name, nullptr,
+  G4PVPlacement* face_phys_vol =
+    new G4PVPlacement(nullptr, G4ThreeVector(),
+                      face_logic_vol, face_name, nullptr,
                       false, 0, true);
 
-  world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  // MOUTH /////////////////////////////////////////////////
 
-  // SHIELDING /////////////////////////////////////////////
+  G4String mouth_name   = "MOUTH";
+  G4double mouth_diam   = face_diam / 1.5;
+  G4double mouth_thickn = face_thickn;
 
-  G4String shield_name   = "SHIELDING";
-  G4double shield_diam   = 10.*m;
-  G4double shield_height = 10.*m;
+  G4Tubs* mouth_solid_vol =
+    new G4Tubs(mouth_name, 0., mouth_diam/2., mouth_thickn/2., 0., 180.*deg);
 
-  G4Tubs* shield_solid_vol =
-    new G4Tubs(shield_name, 0., shield_diam/2., shield_height/2., 0., 360*deg);
-
-  G4LogicalVolume* shield_logic_vol =
-    new G4LogicalVolume(shield_solid_vol,
+  G4LogicalVolume* mouth_logic_vol =
+    new G4LogicalVolume(mouth_solid_vol,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
-                        shield_name);
+                        mouth_name);
 
-  G4RotationMatrix* rotX = new G4RotationMatrix();
-  rotX->rotateX(90*deg);
+  G4RotationMatrix* rotZ = new G4RotationMatrix();
+  rotZ->rotateZ(180.*deg);
 
-  new G4PVPlacement(rotX, G4ThreeVector(0.,0.,0.),
-                    shield_logic_vol, shield_name, world_logic_vol,
+  G4PVPlacement* mouth_phys_vol =
+    new G4PVPlacement(rotZ, G4ThreeVector(0.,0.,0.),
+                      mouth_logic_vol, mouth_name, face_logic_vol,
+                      false, 0, true);
+
+  // TONGUE ////////////////////////////////////////////////
+
+  G4String tongue_name   = "TONGUE";
+  G4double tongue_diam   = 3.*face_diam/8.;
+  G4double tongue_thickn = face_thickn;
+
+  G4Tubs* tongue_solid_vol =
+    new G4Tubs(tongue_name, 0., tongue_diam/2., tongue_thickn/2., 0., 180.*deg);
+
+  G4LogicalVolume* tongue_logic_vol =
+    new G4LogicalVolume(tongue_solid_vol,
+                        G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
+                        tongue_name);
+
+  G4double tongue_posy = tongue_diam/2. - (face_diam/2.)/7.;
+
+  G4PVPlacement* tongue_phys_vol =
+    new G4PVPlacement(nullptr, G4ThreeVector(0., tongue_posy, 0.),
+                      tongue_logic_vol, tongue_name, mouth_logic_vol,
+                      false, 0, true);
+
+  // EYES //////////////////////////////////////////////////
+
+  G4String eyes_name   = "EYES";
+  G4double eyes_diam   = face_diam/7.;
+  G4double eyes_thickn = face_thickn;
+
+  G4Tubs* eyes_solid_vol =
+    new G4Tubs(eyes_name, 0., eyes_diam/2., eyes_thickn/2., 0., 360.*deg);
+
+  G4LogicalVolume* eyes_logic_vol =
+    new G4LogicalVolume(eyes_solid_vol,
+                        G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
+                        eyes_name);
+
+  G4double eyes_posx = (face_diam/4.) * std::cos(55.*deg);
+  G4double eyes_posy = (face_diam/4.) * std::sin(55.*deg);
+
+  new G4PVPlacement(nullptr, G4ThreeVector(eyes_posx, eyes_posy, 0.),
+                    eyes_logic_vol, eyes_name, face_logic_vol,
                     false, 0, true);
 
-  // DETECTOR //////////////////////////////////////////////
-
-  G4String detector_name = "DETECTOR";
-  G4double detector_size = 2.*m;
-
-  G4Box* detector_solid_vol =
-    new G4Box(detector_name, detector_size/2., detector_size/2., detector_size/2.);
-
-  G4LogicalVolume* detector_logic_vol =
-    new G4LogicalVolume(detector_solid_vol, EnrichedXenon(), detector_name);
-
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
-                    detector_logic_vol, detector_name, shield_logic_vol,
-                    false, 0, true);
+  new G4PVPlacement(nullptr, G4ThreeVector(-eyes_posx, eyes_posy, 0.),
+                    eyes_logic_vol, eyes_name, face_logic_vol,
+                    false, 1, true);
 
   //////////////////////////////////////////////////////////
 
-  return world_phys_vol;
-}
-
-
-G4Material* DetectorConstruction::EnrichedXenon() const
-{
-  G4String name = "ENRICHED_XENON";
-  G4double pressure    = 15.0 * bar;
-  G4double temperature = STP_Temperature; // 273.15 K
-  G4double density     = 97.49 * kg/m3;
-
-  G4Material* material =
-    new G4Material(name, density, 1, kStateGas, temperature, pressure);
-
-  G4Element* Xe = new G4Element("ENRICHED_XENON", "Xe", 2);
-
-  G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, 133.905395*g/mole);
-  G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, 135.907219*g/mole);
-  Xe->AddIsotope(Xe134,  9.*perCent);
-  Xe->AddIsotope(Xe136, 91.*perCent);
-
-  material->AddElement(Xe,1);
-
-  return material;
+  return face_phys_vol;
 }

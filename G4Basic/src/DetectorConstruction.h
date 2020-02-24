@@ -18,8 +18,6 @@ public:
   DetectorConstruction();
   virtual ~DetectorConstruction();
   virtual G4VPhysicalVolume* Construct();
-private:
-  G4Material* EnrichedXenon() const;
 };
 
 #endif
