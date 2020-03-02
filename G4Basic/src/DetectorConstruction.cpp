@@ -56,20 +56,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double mouth_thickn = face_thickn;
 
   G4Tubs* mouth_solid_vol =
-    new G4Tubs(mouth_name, 0., mouth_diam/2., mouth_thickn/2., 0., 180.*deg);
+    new G4Tubs(mouth_name, 0., mouth_diam/2., mouth_thickn/2., 180.*deg, 180.*deg);
 
   G4LogicalVolume* mouth_logic_vol =
     new G4LogicalVolume(mouth_solid_vol,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER"),
                         mouth_name);
 
-  G4RotationMatrix* rotZ = new G4RotationMatrix();
-  rotZ->rotateZ(180.*deg);
-
-  G4PVPlacement* mouth_phys_vol =
-    new G4PVPlacement(rotZ, G4ThreeVector(0.,0.,0.),
-                      mouth_logic_vol, mouth_name, face_logic_vol,
-                      false, 0, true);
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
+                    mouth_logic_vol, mouth_name, face_logic_vol,
+                    false, 0, true);
 
   // TONGUE ////////////////////////////////////////////////
 
@@ -78,7 +74,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double tongue_thickn = face_thickn;
 
   G4Tubs* tongue_solid_vol =
-    new G4Tubs(tongue_name, 0., tongue_diam/2., tongue_thickn/2., 0., 180.*deg);
+    new G4Tubs(tongue_name, 0., tongue_diam/2., tongue_thickn/2., 180.*deg, 180.*deg);
 
   G4LogicalVolume* tongue_logic_vol =
     new G4LogicalVolume(tongue_solid_vol,
@@ -87,10 +83,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4double tongue_posy = tongue_diam/2. - (face_diam/2.)/7.;
 
-  G4PVPlacement* tongue_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., tongue_posy, 0.),
-                      tongue_logic_vol, tongue_name, mouth_logic_vol,
-                      false, 0, true);
+  new G4PVPlacement(nullptr, G4ThreeVector(0., -tongue_posy, 0.),
+                   tongue_logic_vol, tongue_name, mouth_logic_vol,
+                   false, 0, true);
 
   // EYES //////////////////////////////////////////////////
 
