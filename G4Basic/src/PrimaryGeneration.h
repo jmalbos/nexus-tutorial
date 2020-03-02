@@ -8,6 +8,7 @@
 #define PRIMARY_GENERATION_H
 
 #include <G4VUserPrimaryGeneratorAction.hh>
+#include <G4ThreeVector.hh>
 #include <globals.hh>
 
 class G4ParticleDefinition;
@@ -19,10 +20,8 @@ public:
   PrimaryGeneration();
   virtual ~PrimaryGeneration();
   virtual void GeneratePrimaries(G4Event*);
-
 private:
-  G4ParticleDefinition* particle_def_;
-  G4double kinetic_energy_;
+  G4ThreeVector RandomPosition() const;
 };
 
 #endif
