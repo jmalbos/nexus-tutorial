@@ -28,6 +28,9 @@ PrimaryGeneration::~PrimaryGeneration()
 
 void PrimaryGeneration::GeneratePrimaries(G4Event* event)
 {
+  // The variable below is defined as static,and thus it is only
+  // initialized once. We cannot initialize it in the constructor, because
+  // Geant4 has not built yet the ion table.
   static G4ParticleDefinition* Kr83m =
     G4IonTable::GetIonTable()->GetIon(36, 83, 42.*keV);
 
